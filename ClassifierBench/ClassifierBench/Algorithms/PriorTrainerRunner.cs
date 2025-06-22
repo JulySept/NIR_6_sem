@@ -11,4 +11,15 @@ public class PriorTrainerRunner(MLContext mlContext) : AlgorithmRunner(mlContext
 
     protected override IEstimator<ITransformer> Estimator => MlContext.BinaryClassification.Trainers.Prior();
     public override string Name => "Prior";
+    
+    public override Dictionary<string, double> Evaluate(IDataView predictions)
+    {
+        var metrics = MlContext.BinaryClassification.Evaluate(predictions);
+        return new Dictionary<string, double>
+        {
+            ["Accuracy"] = metrics.Accuracy,
+            ["AUC"] = metrics.AreaUnderRocCurve,
+            ["F1Score"] = metrics.F1Score,
+        };
+    }
 }

@@ -7,30 +7,49 @@ public class ExperimentRunner(IDataView trainData, IDataView testData)
 {
     private readonly PerformanceMeasurer _performanceMeasurer = new();
 
-    public PerformanceMetrics RunExperiment(AlgorithmRunner algorithmRunner, int runsCount = 5)
+    public ExperimentResult RunExperiment(AlgorithmRunner algorithmRunner, int runsCount = 5)
     {
-        var metricsList = new List<PerformanceMetrics>();
+        var perfMetricsList = new List<PerformanceMetrics>();
+        var modelMetricsList = new List<Dictionary<string, double>>();
 
         for (int i = 0; i < runsCount; i++)
         {
             var trainDataPrepared = algorithmRunner.PrepareData(trainData);
             var testDataPrepared = algorithmRunner.PrepareData(testData);
-            
+            IDataView predictions = null!;
+
             var metrics = _performanceMeasurer.Measure(() =>
             {
                 algorithmRunner.Train(trainDataPrepared);
-                algorithmRunner.Predict(testDataPrepared);
+                predictions = algorithmRunner.Predict(testDataPrepared);
             });
-            
-            metricsList.Add(metrics);
+
+            perfMetricsList.Add(metrics);
+            var currentModelMetrics = algorithmRunner.Evaluate(predictions);
+            modelMetricsList.Add(currentModelMetrics);
         }
 
-        return new PerformanceMetrics
+        return new ExperimentResult
         {
-            ElapsedMilliseconds = (long)metricsList.Average(m => m.ElapsedMilliseconds),
-            CpuTimeMs = metricsList.Average(m => m.CpuTimeMs),
-            MemoryKb = metricsList.Average(m => m.MemoryKb),
-            AllocatedMemoryMb = metricsList.Average(m => m.AllocatedMemoryMb)
+            Performance = new PerformanceMetrics
+            {
+                ElapsedMilliseconds = (long)perfMetricsList.Average(m => m.ElapsedMilliseconds),
+                CpuTimeMs = perfMetricsList.Average(m => m.CpuTimeMs),
+                MemoryKb = perfMetricsList.Average(m => m.MemoryKb),
+                AllocatedMemoryMb = perfMetricsList.Average(m => m.AllocatedMemoryMb)
+            },
+            ModelMetrics = AverageModelMetrics(modelMetricsList)
         };
+    }
+
+    private static Dictionary<string, double> AverageModelMetrics(List<Dictionary<string, double>> metricsList)
+    {
+        return metricsList
+            .SelectMany(dict => dict)
+            .GroupBy(kv => kv.Key)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Average(kv => kv.Value)
+            );
     }
 }

@@ -31,14 +31,24 @@ public static class Program
         {
             Console.WriteLine($"Запускаем алгоритм: {algorithm.Name}");
 
-            var avgMetrics = experimentRunner.RunExperiment(algorithm, runsCount);
-            
-            Console.WriteLine($"Средние показатели для {algorithm.Name}:");
-            Console.WriteLine($"  Время выполнения: {avgMetrics.ElapsedMilliseconds} ms");
-            Console.WriteLine($"  CPU время: {avgMetrics.CpuTimeMs} ms");
-            Console.WriteLine($"  Память: {avgMetrics.MemoryKb:F2} Kb");
-            Console.WriteLine($"  Аллоцировано памяти: {avgMetrics.AllocatedMemoryMb:F2} Mb");
+            var experimentResult = experimentRunner.RunExperiment(algorithm, runsCount);
+
+            Console.WriteLine($"Результаты эксперимента для {algorithm.Name}:");
+            Console.WriteLine($"  Время выполнения: {experimentResult.Performance.ElapsedMilliseconds} ms");
+            Console.WriteLine($"  CPU время: {experimentResult.Performance.CpuTimeMs} ms");
+            Console.WriteLine($"  Память: {experimentResult.Performance.MemoryKb:F2} Kb");
+            Console.WriteLine($"  Аллоцировано памяти: {experimentResult.Performance.AllocatedMemoryMb:F2} Mb");
+
+            if (experimentResult.ModelMetrics != null)
+            {
+                Console.WriteLine("  Метрики модели:");
+                foreach (var (name, value) in experimentResult.ModelMetrics)
+                {
+                    Console.WriteLine($"    {name}: {value:F4}");
+                }
+            }
             Console.WriteLine();
+
         }
     }
 }

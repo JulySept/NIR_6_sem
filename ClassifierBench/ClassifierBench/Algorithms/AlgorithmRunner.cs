@@ -27,4 +27,6 @@ public abstract class AlgorithmRunner(MLContext mlContext)
 
         return _model.Transform(testData);
     }
+    
+    public abstract Dictionary<string, double> Evaluate(IDataView predictions);
 }
