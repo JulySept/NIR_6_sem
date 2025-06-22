@@ -2,31 +2,13 @@ using Microsoft.ML;
 
 namespace ClassifierBench.Algorithms;
 
-public class LdSvmRunner(MLContext mlContext) : IAlgorithmRunner
+public class LdSvmRunner(MLContext mlContext) : AlgorithmRunner(mlContext)
 {
-    private ITransformer? _model;
-
-    private readonly IEstimator<ITransformer> _dataPrepEstimator = mlContext.Transforms.Concatenate("Features",
+    protected override IEstimator<ITransformer> DataPrepEstimator => MlContext.Transforms.Concatenate("Features",
             "CapDiameter", "CapShape", "GillAttachment", "GillColor",
             "StemHeight", "StemWidth", "StemColor", "Season")
-        .Append(mlContext.Transforms.NormalizeMinMax("Features"));
-    private readonly IEstimator<ITransformer> _estimator = mlContext.BinaryClassification.Trainers.LdSvm();
-    private bool _isModelTrained = false;
-    public string Name => "LdSvm";
+        .Append(MlContext.Transforms.NormalizeMinMax("Features"));
 
-    public IDataView PrepareData(IDataView data)
-    {
-        return _dataPrepEstimator.Fit(data).Transform(data);
-    }
-
-    public void Train(IDataView trainData)
-    {
-        _model = _estimator.Fit(trainData);
-        _isModelTrained = true;
-    }
-
-    public IDataView Predict(IDataView testData)
-    {
-        return _isModelTrained ? _model.Transform(testData) : null;
-    }
+    protected override IEstimator<ITransformer> Estimator => MlContext.BinaryClassification.Trainers.LdSvm();
+    public override string Name => "LdSvm";
 }

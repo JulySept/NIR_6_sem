@@ -17,7 +17,7 @@ public class Program
         var split = mlContext.Data.TrainTestSplit(rawData, testFraction: 0.2);
         var trainData = split.TrainSet;
         var testData = split.TestSet;
-        var algorithms = new List<IAlgorithmRunner>
+        var algorithms = new List<AlgorithmRunner>
         {
             new LdSvmRunner(mlContext),
             new PriorTrainerRunner(mlContext),

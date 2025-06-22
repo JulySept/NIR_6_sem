@@ -7,7 +7,7 @@ public class ExperimentRunner(IDataView trainData, IDataView testData)
 {
     private readonly PerformanceMeasurer _performanceMeasurer = new();
 
-    public PerformanceMetrics RunExperiment(IAlgorithmRunner algorithmRunner, int runsCount = 5)
+    public PerformanceMetrics RunExperiment(AlgorithmRunner algorithmRunner, int runsCount = 5)
     {
         var metricsList = new List<PerformanceMetrics>();
 

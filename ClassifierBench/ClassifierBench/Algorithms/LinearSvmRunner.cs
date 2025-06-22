@@ -2,29 +2,13 @@ using Microsoft.ML;
 
 namespace ClassifierBench.Algorithms;
 
-public class LinearSvmRunner(MLContext mlContext) : IAlgorithmRunner
+public class LinearSvmRunner(MLContext mlContext) : AlgorithmRunner(mlContext)
 {
-    private ITransformer? _model;
-    private readonly IEstimator<ITransformer> _dataPrepEstimator = mlContext.Transforms.Concatenate("Features", "CapDiameter", "CapShape", "GillAttachment", "GillColor",
+    protected override IEstimator<ITransformer> DataPrepEstimator => MlContext.Transforms.Concatenate("Features",
+            "CapDiameter", "CapShape", "GillAttachment", "GillColor",
             "StemHeight", "StemWidth", "StemColor", "Season")
-        .Append(mlContext.Transforms.NormalizeMinMax("Features"));
-    private readonly IEstimator<ITransformer> _estimator = mlContext.BinaryClassification.Trainers.LinearSvm();
-    private bool _isModelTrained = false;
-    public string Name => "LinearSvm";
+        .Append(MlContext.Transforms.NormalizeMinMax("Features"));
 
-    public IDataView PrepareData(IDataView data)
-    {
-        return _dataPrepEstimator.Fit(data).Transform(data);
-    }
-
-    public void Train(IDataView trainData)
-    {
-        _model = _estimator.Fit(trainData);
-        _isModelTrained = true;
-    }
-
-    public IDataView Predict(IDataView testData)
-    {
-        return _isModelTrained ? _model.Transform(testData) : null;
-    }
+    protected override IEstimator<ITransformer> Estimator => MlContext.BinaryClassification.Trainers.LinearSvm();
+    public override string Name => "LinearSvm";
 }
