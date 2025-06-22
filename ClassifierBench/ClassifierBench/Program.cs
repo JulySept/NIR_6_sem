@@ -4,9 +4,9 @@ using Microsoft.ML;
 
 namespace ClassifierBench;
 
-public class Program
+public static class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         var mlContext = new MLContext();
         string dataPath = "Data/mushrooms_cleaned.csv";
@@ -37,6 +37,7 @@ public class Program
             Console.WriteLine($"  Время выполнения: {avgMetrics.ElapsedMilliseconds} ms");
             Console.WriteLine($"  CPU время: {avgMetrics.CpuTimeMs} ms");
             Console.WriteLine($"  Память: {avgMetrics.MemoryKb:F2} Kb");
+            Console.WriteLine($"  Аллоцировано памяти: {avgMetrics.AllocatedMemoryMb:F2} Mb");
             Console.WriteLine();
         }
     }

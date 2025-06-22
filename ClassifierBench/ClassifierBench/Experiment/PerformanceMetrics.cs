@@ -4,5 +4,6 @@ public class PerformanceMetrics
 {
     public long ElapsedMilliseconds { get; set; }
     public double MemoryKb  { get; set; }
+    public double AllocatedMemoryMb { get; set; } 
     public double CpuTimeMs { get; set; }
 }

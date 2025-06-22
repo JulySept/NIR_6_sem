@@ -29,7 +29,8 @@ public class ExperimentRunner(IDataView trainData, IDataView testData)
         {
             ElapsedMilliseconds = (long)metricsList.Average(m => m.ElapsedMilliseconds),
             CpuTimeMs = metricsList.Average(m => m.CpuTimeMs),
-            MemoryKb = metricsList.Average(m => m.MemoryKb)
+            MemoryKb = metricsList.Average(m => m.MemoryKb),
+            AllocatedMemoryMb = metricsList.Average(m => m.AllocatedMemoryMb)
         };
     }
 }

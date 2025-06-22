@@ -18,6 +18,7 @@ public class PerformanceMeasurer
         GC.Collect();
 
         long memoryBefore = GC.GetTotalMemory(forceFullCollection: true);
+        long allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
         TimeSpan cpuBefore = _process.TotalProcessorTime;
         var stopwatch = Stopwatch.StartNew();
 
@@ -26,12 +27,14 @@ public class PerformanceMeasurer
         stopwatch.Stop();
         _process.Refresh(); 
         long memoryAfter = GC.GetTotalMemory(forceFullCollection: true);
+        long allocatedAfter = GC.GetAllocatedBytesForCurrentThread();
         TimeSpan cpuAfter = _process.TotalProcessorTime;
 
         return new PerformanceMetrics
         {
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             MemoryKb = (memoryAfter - memoryBefore) / 1024.0,
+            AllocatedMemoryMb = (allocatedAfter - allocatedBefore) / 1024.0 / 1024.0,
             CpuTimeMs = (cpuAfter - cpuBefore).TotalMilliseconds
         };
     }
