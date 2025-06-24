@@ -13,7 +13,7 @@ public class NaiveBayesRunner(MLContext mlContext) : AlgorithmRunner(mlContext)
 
     protected override IEstimator<ITransformer> Estimator => MlContext.MulticlassClassification.Trainers.NaiveBayes();
     public override string Name => "NaiveBayes";
-    public override Dictionary<string, double> Evaluate(IDataView predictions)
+    public override IDictionary<string, double> Evaluate(IDataView predictions)
     {
         var metrics = MlContext.MulticlassClassification.Evaluate(predictions);
         return new Dictionary<string, double>

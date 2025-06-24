@@ -10,7 +10,7 @@ public class ExperimentRunner(IDataView trainData, IDataView testData)
     public ExperimentResult RunExperiment(AlgorithmRunner algorithmRunner, int runsCount = 5)
     {
         var perfMetricsList = new List<PerformanceMetrics>();
-        var modelMetricsList = new List<Dictionary<string, double>>();
+        var modelMetricsList = new List<IDictionary<string, double>>();
 
         for (int i = 0; i < runsCount; i++)
         {
@@ -42,7 +42,7 @@ public class ExperimentRunner(IDataView trainData, IDataView testData)
         };
     }
 
-    private static Dictionary<string, double> AverageModelMetrics(List<Dictionary<string, double>> metricsList)
+    private static Dictionary<string, double> AverageModelMetrics(List<IDictionary<string, double>> metricsList)
     {
         return metricsList
             .SelectMany(dict => dict)

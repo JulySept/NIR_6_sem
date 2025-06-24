@@ -12,7 +12,7 @@ public class LdSvmRunner(MLContext mlContext) : AlgorithmRunner(mlContext)
     protected override IEstimator<ITransformer> Estimator => MlContext.BinaryClassification.Trainers.LdSvm();
     public override string Name => "LdSvm";
     
-    public override Dictionary<string, double> Evaluate(IDataView predictions)
+    public override IDictionary<string, double> Evaluate(IDataView predictions)
     {
         var metrics = MlContext.BinaryClassification.EvaluateNonCalibrated(predictions);
         return new Dictionary<string, double>
