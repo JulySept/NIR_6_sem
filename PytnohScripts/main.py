@@ -5,8 +5,8 @@ scripts = [
     #"naive_bayes.py",
     #"linear_svm.py",
     #"ld_svm.py",
-    #"gradient_boosting.py"
-    "keras.py"
+    "gradient_boosting.py",
+    #"keras_model.py"
 ]
 
 for script in scripts:

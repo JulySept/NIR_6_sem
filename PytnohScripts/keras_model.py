@@ -11,7 +11,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
 
-RUNS = 5
+RUNS = 1
 metrics = {
     "accuracy": [],
     "elapsed_ms": [],
